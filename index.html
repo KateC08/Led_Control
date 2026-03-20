@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HIT- Assignment 1</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background-color: #f4f7f6; color: #333; padding-top: 50px; }
+        .container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: inline-block; }
+        h1 { color: #2c3e50; }
+        .btn { padding: 15px 30px; font-size: 18px; font-weight: bold; cursor: pointer; margin: 10px; border-radius: 8px; border: none; transition: 0.3s; }
+        .on { background-color: #27ae60; color: white; }
+        .on:hover { background-color: #2ecc71; }
+        .off { background-color: #c0392b; color: white; }
+        .off:hover { background-color: #e74c3c; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>LED Status</h1>
+        <p>Control the ESP32 Blue LED via Firebase</p>
+        <p id="status-msg"></p>
+        <button class="btn on" onclick="sendData(1)">LED ON</button>
+        <button class="btn off" onclick="sendData(0)">LED OFF</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="config.js"></script>
+
+    <script>
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    function sendData(val) {
+        const statusText = document.getElementById('status-msg');
+        statusText.innerText = "Sending command...";
+        
+        database.ref('/LED_Status').set(val)
+        .then(() => {
+            statusText.innerText = "Command Received!";
+            setTimeout(() => { statusText.innerText = ""; }, 2000);
+        });
+    }
+</script>
+</body>
+</html>
