@@ -31,15 +31,18 @@
     const database = firebase.database();
 
     function sendData(val) {
-        const statusText = document.getElementById('status-msg');
-        statusText.innerText = "Sending command...";
-        
-        database.ref('/LED_Status').set(val)
-        .then(() => {
-            statusText.innerText = "Command Received!";
-            setTimeout(() => { statusText.innerText = ""; }, 2000);
-        });
-    }
+    const statusText = document.getElementById('status-msg');
+    
+    // TRICK: Update the UI BEFORE the database responds
+    statusText.innerText = (val === 1) ? "LED Turning ON..." : "LED Turning OFF...";
+    
+    // Then send the data in the background
+    database.ref('/LED_Status').set(val)
+    .then(() => {
+        statusText.innerText = "Synced with Cloud!";
+        setTimeout(() => { statusText.innerText = ""; }, 1000);
+    });
+}
 </script>
 </body>
 </html>
